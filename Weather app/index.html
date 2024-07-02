@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0%;
+            padding: 0%;
+        }
+        html,body{
+            width: 100%;
+            height: 100%;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 30px;
+            font-family: sans-serif;
+        }
+        #weathercity{
+            padding: 10px 8px ;
+            outline: none;
+            border-radius: 5px;
+        }
+        .weather-form{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .weather-form button{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            border: none;
+            background-color: rgb(0, 169, 0);
+            color: white;
+            padding: 10px 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 13px;
+            background: linear-gradient(180deg, rgb(78, 78, 255) , rgb(101, 19, 169));
+            padding: 20px;
+            min-width: 280px;
+            color: white;
+            border-radius: 8px;
+        }
+        .container h1{
+            font-size: 40px;
+        }
+        .container h2{
+            font-size: 30px;
+        }
+        .container img{
+            width: 135px;
+            height: 135px;
+        }
+    </style>
+</head>
+<body>
+    <div class="weather-form">
+        <input type="text" id="weathercity" placeholder="Enter city name..">
+        <button onclick="getweather()">Get Weather</button>
+    </div>
+    <div class="container" style="display: none;" id="container">
+       <h1 id="cityname">City name</h1>
+       <h2 id="citytemp">45</h2>
+       <h2 id="cityhumi">Humidity</h2>
+       <h2 id="condition">Condituon</h2>
+      <img src="" id="conditionimg" alt="">
+    </div>
+
+<script>
+    //https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
+    //dd19b95d4b73b36c6a53a3a47cca554e
+    const getweather = async () =>{
+        const citynameform = document.getElementById('weathercity').value.toLowerCase()
+        const cityname = document.getElementById('cityname')
+        const temp = document.getElementById('citytemp')
+        const humi = document.getElementById('cityhumi')
+        const condition = document.getElementById('condition')
+        const conditionimg = document.getElementById('conditionimg')
+        const container = document.getElementById('container')
+  
+        let apidata = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${citynameform}&appid=dd19b95d4b73b36c6a53a3a47cca554e`)
+          .then(res => res.json())
+          .then(data => {
+          let result = data.main.temp - 272.15;
+          cityname.innerHTML = data.name;
+          temp.innerHTML =  result.toFixed(1)+"°C";
+          humi.innerHTML = "Humidity " + data.main.humidity +  "%"
+          condition.innerHTML =  data.weather[0].description;
+          if(data.name == undefined){
+   alert(`We cant reach ${citynameform} city`)
+            container.style.display = 'none'
+        }
+        else{
+            container.style.display = 'flex'
+        }
+          switch(data.weather[0].main){
+            case 'Clouds':
+           conditionimg.src = 'weather-app-img/images/clouds.png'
+           break
+           case 'Mist':
+            conditionimg.src = 'weather-app-img/images/mist.png'
+            break
+            case 'Rain':
+            conditionimg.src = 'weather-app-img/images/rain.png'
+            break
+            case 'Snow':
+            conditionimg.src = 'weather-app-img/images/snow.png'
+            break
+            case 'Wind':
+            conditionimg.src = 'weather-app-img/images/wind.png'
+            break
+            case 'Drizzle':
+            conditionimg.src = 'weather-app-img/images/drizzle.png'
+            break
+            case 'Clear':
+            conditionimg.src = 'weather-app-img/images/clear.png'
+            break
+          }
+          })
+    };
+</script>
+</body>
+</html>
